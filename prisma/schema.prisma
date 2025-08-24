@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  coach
+  player
+}
+
+enum PlayerStatus {
+  Starter
+  Bench
+}
+
+enum PlayerPosition {
+  pg
+  sg
+  sf
+  pf
+  c
+}
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  password String
+  name     String
+  pfp_url  String?
+  role     UserRole
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  coach  Coach?
+  player Player?
+  admin  Admin?
+
+  @@map("users")
+}
+
+model Teams {
+  id       String  @id @default(uuid())
+  name     String
+  city     String
+  logo_url String?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  coach       Coach?
+  players     Player[]
+  homeMatches Matches[] @relation("HomeTeam")
+  awayMatches Matches[] @relation("AwayTeam")
+
+  @@map("teams")
+}
+
+model Coach {
+  user_id String @id
+  team_id String @unique
+
+  user User  @relation(fields: [user_id], references: [id])
+  team Teams @relation(fields: [team_id], references: [id])
+
+  @@map("coaches")
+}
+
+model Player {
+  user_id  String         @id
+  number   Int
+  position PlayerPosition @default(pg)
+  status   PlayerStatus   @default(Starter)
+  team_id  String
+
+  user  User    @relation(fields: [user_id], references: [id])
+  team  Teams   @relation(fields: [team_id], references: [id])
+  stats Stats[]
+
+  @@map("players")
+}
+
+model Admin {
+  user_id String @id
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("admins")
+}
+
+model Matches {
+  id          String   @id @default(uuid())
+  date        DateTime
+  score_team1 Int?
+  score_team2 Int?
+  home_team   String
+  away_team   String
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  homeTeam Teams   @relation("HomeTeam", fields: [home_team], references: [id])
+  awayTeam Teams   @relation("AwayTeam", fields: [away_team], references: [id])
+  stats    Stats[]
+
+  @@map("matches")
+}
+
+model Stats {
+  id        String @id @default(uuid())
+  points    Int?
+  rebounds  Int?
+  assists   Int?
+  player_id String
+  match_id  String
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  player Player  @relation(fields: [player_id], references: [user_id])
+  match  Matches @relation(fields: [match_id], references: [id])
+
+  @@unique([player_id, match_id])
+  @@map("stats")
+}
