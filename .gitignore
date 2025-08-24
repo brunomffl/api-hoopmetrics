@@ -1,3 +1,4 @@
 .env
 .prettierrc.json
 generated
+node_modules
