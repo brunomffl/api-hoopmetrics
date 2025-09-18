@@ -17,7 +17,7 @@ async function main() {
     const adminUser = await prisma.user.create({
         data: {
             email: 'admin@hoopmetrics.com',
-            password: await bcrypt.hash('admin123', 10),
+            password: await bcrypt.hash('123456', 10),
             name: 'Administrador Principal',
             role: 'admin',
             admin: {
@@ -26,8 +26,8 @@ async function main() {
         },
         include: {
             admin: true
-    }
-});
+        }
+    });
 
 }
 
