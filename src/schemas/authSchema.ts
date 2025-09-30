@@ -5,4 +5,9 @@ export const authSchema = z.object({
     password: z.string()
 });
 
+export interface TokenPayLoad {
+    id: string,
+    role: string
+}
+
 export type AuthLoginSchema = z.infer<typeof authSchema>;
