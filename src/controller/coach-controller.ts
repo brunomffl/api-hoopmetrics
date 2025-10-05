@@ -1,13 +1,22 @@
 import { Request, Response } from "express";
+import { CoachService } from "@/services/coach-service";
 //importar serviço
 
 class CoachController {
 
+    private coachService: CoachService;
+
+    constructor(){
+        this.coachService = new CoachService();
+    }
+
     async create(req: Request, res: Response){
-        //recuperar dados do body
-        //mandar pro service
-        //retorno de sucesso
-        return res.json({ message: "teste rota create do coach" });
+        const coach = await this.coachService.create(req.body);
+
+        return res.status(201).json({
+            message: "Técnico criado com sucesso!",
+            coach
+        });
     }
 };
 
