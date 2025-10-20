@@ -1,4 +1,3 @@
-import { error } from "console";
 import { z } from "zod";
 
 export const createTeamSchema = z.object({
@@ -6,5 +5,7 @@ export const createTeamSchema = z.object({
     city: z.string().min(3, { error: "Cidade deve conter pelo menos 3 letras" }),
     logo_url: z.url().optional(),
 });
+
+
 
 export type CreateTeamSchema = z.infer<typeof createTeamSchema>;
