@@ -4,6 +4,16 @@ import { CreateCoachSchema, UpdateCoachSchema } from "@/schemas/coachSchema";
 import { hash } from "bcrypt";
 
 class CoachService{
+    async index(){
+        const coaches = await prisma.coach.findMany();
+
+        if(coaches.length === 0){
+            throw new AppError("Nenhum treinador foi cadastrado!", 400);
+        };
+
+        return coaches;
+    }
+    
     async create(coachData: CreateCoachSchema){
         return await prisma.$transaction(async (tx) => {
             const existingUser = await tx.user.findUnique({

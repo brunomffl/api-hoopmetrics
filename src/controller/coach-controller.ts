@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { CoachService } from "@/services/coach-service";
-//importar serviço
 
 class CoachController {
 
@@ -8,6 +7,12 @@ class CoachController {
 
     constructor(){
         this.coachService = new CoachService();
+    }
+
+    async index(req: Request, res: Response){
+        const coaches = await this.coachService.index();
+
+        return res.json(201).json(coaches);
     }
 
     async create(req: Request, res: Response){
