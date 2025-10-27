@@ -33,6 +33,13 @@ class CoachController {
             updatedCoach
         });
     };
+
+    async delete(req: Request, res: Response){
+        const { id } = req.params
+        await this.coachService.delete(id);
+
+        return res.status(200).json({ message: "Técnico deletado com sucesso!" });
+    }
 };
 
 export { CoachController };

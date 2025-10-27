@@ -20,5 +20,6 @@ export const updateCoachSchema = z.object({
     team_id: z.string().optional()
 });
 
+export type ValidateCoachId = z.infer<typeof validateCoachId>;
 export type CreateCoachSchema = z.infer<typeof createCoachSchema>;
 export type UpdateCoachSchema = z.infer<typeof updateCoachSchema>;
