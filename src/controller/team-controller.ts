@@ -11,7 +11,12 @@ class TeamController {
 
     async create(req: Request, res: Response){
         const team = await this.teamService.create(req.body);
-        return res.status(201).json({ message: "Time criado com sucesso", team });
+        return res.status(201).json({ message: "Time criado com sucesso!", team });
+    }
+
+    async delete(req: Request, res: Response){
+        const team = await this.teamService.delete(req.params.team_id);
+        return res.status(204).json({ message: "Time deletado com sucesso!", team });
     }
 };
 
