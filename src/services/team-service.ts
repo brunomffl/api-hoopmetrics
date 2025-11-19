@@ -23,6 +23,16 @@ class TeamService{
         return team;
     }
 
+    async index(){
+        const teams = await prisma.teams.findMany();
+
+        return {
+            teams,
+            total: teams.length,
+            message: teams.length === 0 ? "Nenhum time foi cadastrado" : undefined   
+        };
+    }
+
     async delete(team_id: string ){
         const team = await prisma.teams.findFirst({
             where: {

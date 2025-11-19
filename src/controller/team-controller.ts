@@ -14,6 +14,11 @@ class TeamController {
         return res.status(201).json({ message: "Time criado com sucesso!", team });
     }
 
+    async index(req: Request, res: Response){
+        const team = await this.teamService.index;
+        return res.status(201).json(team);
+    }
+
     async delete(req: Request, res: Response){
         const team = await this.teamService.delete(req.params.team_id);
         return res.status(204).json({ message: "Time deletado com sucesso!", team });
