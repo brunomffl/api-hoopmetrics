@@ -1,6 +1,6 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
-import { CreateTeamSchema } from "@/schemas/teamSchema";
+import { CreateTeamSchema, UpdateTeamSchema } from "@/schemas/teamSchema";
 
 class TeamService{
     async create(teamData: CreateTeamSchema){
@@ -31,6 +31,35 @@ class TeamService{
             total: teams.length,
             message: teams.length === 0 ? "Nenhum time foi cadastrado" : undefined   
         };
+    }
+
+    async update(team_id: string, teamData: UpdateTeamSchema){
+        const team = await prisma.teams.findFirst({
+            where: { id: team_id }
+        });
+
+        if(!team){
+            throw new AppError("Time não encontrado!", 404);
+        };
+
+        if(teamData.name !== team.name){
+            const existingTeam = await prisma.teams.findFirst({
+                where: {
+                    name: teamData.name
+                }
+            });
+
+            if(existingTeam){
+                throw new AppError("Já existe um time com esse nome", 400);
+            }
+        };
+
+        const updatedTeam = await prisma.teams.update({
+            where: { id: team_id },
+            data: teamData
+        });
+
+        return updatedTeam;
     }
 
     async delete(team_id: string ){
