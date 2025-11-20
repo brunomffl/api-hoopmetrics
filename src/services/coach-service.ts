@@ -1,19 +1,9 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
-import { CreateCoachSchema, UpdateCoachSchema, ValidateCoachId } from "@/schemas/coachSchema";
+import { CreateCoachSchema, UpdateCoachSchema } from "@/schemas/coachSchema";
 import { hash } from "bcrypt";
 
 class CoachService{
-    async index(){
-        const coaches = await prisma.coach.findMany();
-
-        if(coaches.length === 0){
-            throw new AppError("Nenhum treinador foi cadastrado!", 400);
-        };
-
-        return coaches;
-    }
-    
     async create(coachData: CreateCoachSchema){
         return await prisma.$transaction(async (tx) => {
             const existingUser = await tx.user.findUnique({
@@ -81,6 +71,16 @@ class CoachService{
             });
             return coach;
         })
+    };
+
+    async index(){
+        const coaches = await prisma.coach.findMany();
+
+        return {
+            coaches,
+            total: coaches.length,
+            message: coaches.length === 0 ? "Nenhum técnico foi cadastrado" : undefined   
+        };
     }
 
     async update(user_id: string, coachData: UpdateCoachSchema){
@@ -116,6 +116,7 @@ class CoachService{
                     throw new AppError("Novo time já possui um técnico!", 400);
                 }
             }
+
             const userUpdateData: any = {};
             if (coachData.name) userUpdateData.name = coachData.name;
             if (coachData.email) userUpdateData.email = coachData.email;
@@ -158,7 +159,7 @@ class CoachService{
 
             return updatedCoach;
         });
-    }
+    };
 
     async delete(user_id: string){
         const coach = await prisma.coach.findFirst({
@@ -170,7 +171,22 @@ class CoachService{
         if(!coach){
             throw new AppError("Técnico não encontrado!", 404);
         }
-        
+
+        return await prisma.$transaction(async (tx) => {
+            await tx.coach.delete({
+                where: {
+                    user_id
+                }
+            });
+
+            await tx.user.delete({
+                where: {
+                    id: user_id
+                }
+            });
+
+            return { message: "Coach e usuário deletados com sucesso" };
+        });
     };
 };
 
