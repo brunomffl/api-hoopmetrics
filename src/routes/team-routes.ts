@@ -8,24 +8,24 @@ import { verifyUserAuthorizations } from "@/middlewares/verify-user-authorizatio
 const teamRoutes = Router();
 const teamController = new TeamController();
 
-teamRoutes.post("/",
+teamRoutes.post("/admin",
     validateParams(createTeamSchema),
     verifyUserAuthorizations(['admin']),
     teamController.create.bind(teamController),
 );
 
-teamRoutes.get("/",
+teamRoutes.get("/admin",
     verifyUserAuthorizations(['admin']),
     teamController.index.bind(teamController)
 );
 
-teamRoutes.put("/:id",
+teamRoutes.put("/admin/:id",
     validateParams(updateTeamScehma),
     verifyUserAuthorizations(['admin']),
     teamController.update.bind(teamController)
 );
 
-teamRoutes.delete("/:id",
+teamRoutes.delete("/admin/:id",
     validateParams(validateTeamId),
     verifyUserAuthorizations(['admin']),
     teamController.delete.bind(teamController),

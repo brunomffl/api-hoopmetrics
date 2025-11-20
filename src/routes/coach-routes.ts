@@ -8,25 +8,25 @@ import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
 const coachRoutes = Router();
 const coachController = new CoachController()
 
-coachRoutes.get("/",
+coachRoutes.get("/admin",
     verifyUserAuthorizations(["admin"]),
     coachController.index.bind(coachController)
 );
 
-coachRoutes.post("/",
+coachRoutes.post("/admin",
     verifyUserAuthorizations(["admin"]),
     validateBody(createCoachSchema),
     coachController.create.bind(coachController)
 );
 
-coachRoutes.put("/:id",
+coachRoutes.put("/admin/:id",
     verifyUserAuthorizations(["admin"]),
     validateParams(validateCoachId),
     validateBody(updateCoachSchema),
     coachController.update.bind(coachController)
 );
 
-coachRoutes.delete("/:id",
+coachRoutes.delete("/admin/:id",
     verifyUserAuthorizations(["admin"]),
     validateParams(validateCoachId),
     coachController.delete.bind(coachController)
