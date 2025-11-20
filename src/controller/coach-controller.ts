@@ -12,7 +12,7 @@ class CoachController {
     async index(req: Request, res: Response){
         const coaches = await this.coachService.index();
 
-        return res.json(201).json(coaches);
+        return res.status(201).json(coaches);
     }
 
     async create(req: Request, res: Response){

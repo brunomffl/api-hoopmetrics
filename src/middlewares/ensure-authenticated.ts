@@ -19,10 +19,10 @@ function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
             throw new AppError("JWT secret não configurado!", 500); //verificação necessária para a desestruturação abaixo funcionar sem ts ficar reclamando
         }
 
-        const { role, id: user_id } = verify(token, authConfig.jwt.secret as string) as unknown as TokenPayLoad;
+        const { role, sub: user_id } = verify(token, authConfig.jwt.secret as string) as unknown as TokenPayLoad;
 
         req.user = {
-            id: user_id,
+            sub: user_id,
             role
         }
 

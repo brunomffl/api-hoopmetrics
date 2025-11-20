@@ -6,7 +6,7 @@ export const authSchema = z.object({
 });
 
 export interface TokenPayLoad {
-    id: string,
+    sub: string,
     role: string
 }
 

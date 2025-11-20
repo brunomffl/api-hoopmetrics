@@ -33,6 +33,88 @@ class TeamService{
         };
     }
 
+    async getMyTeam(user_id: string){
+        console.log("🔍 USER_ID recebido:", user_id);
+        
+        const user = await prisma.user.findFirst({
+            where: { 
+                id: user_id
+            }
+        });
+
+        if(!user){
+            throw new AppError("Usuário não encontrado!", 404);
+        };
+
+        const user_role: string = user.role;
+        let team_id: string | undefined;
+
+        switch(user_role){
+            case 'coach':
+                const coach = await prisma.coach.findFirst({
+                    where: {
+                        user_id
+                    }
+                });
+
+                if(!coach){
+                    throw new AppError("Técnico não encontrado!", 404);
+                };
+
+                if(!coach.team_id){
+                    throw new AppError("Nenhum time foi vinculado a esse técnico", 400);
+                };
+
+                team_id = coach.team_id;
+                break;
+            case 'player':
+                const player = await prisma.player.findFirst({
+                    where: {
+                        user_id
+                    }
+                });
+
+                if(!player){
+                    throw new AppError("Jogador não encontrado!", 404);
+                };
+                if(!player.team_id){
+                    throw new AppError("Nenhum time foi vinculado a esse jogador", 400);
+                };
+
+                team_id = player.team_id;
+                break;
+
+            default:
+                console.log(user.name);
+                throw new AppError("Usuário não é Jogador ou Técnico!", 400)
+                break;
+        };
+
+        const team = await prisma.teams.findFirst({
+            where: {
+                id: team_id
+            },
+            include: {
+                coach: { 
+                    select: {
+                        user: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                players: { include: { user: true } },
+            }
+        });
+
+        if(!team){
+            throw new AppError("Time não foi encontrado!", 404);
+        };
+
+        return team
+    };
+
     async update(team_id: string, teamData: UpdateTeamSchema){
         const team = await prisma.teams.findFirst({
             where: { id: team_id }
