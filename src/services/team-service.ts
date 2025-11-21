@@ -34,8 +34,6 @@ class TeamService{
     }
 
     async getMyTeam(user_id: string){
-        console.log("🔍 USER_ID recebido:", user_id);
-        
         const user = await prisma.user.findFirst({
             where: { 
                 id: user_id
