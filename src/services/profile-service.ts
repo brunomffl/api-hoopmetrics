@@ -21,6 +21,9 @@ class ProfileService {
                 const coach = await prisma.coach.findFirst({
                     where: {
                         user_id
+                    },
+                    include: {
+                        team: true
                     }
                 });
 
@@ -28,9 +31,11 @@ class ProfileService {
                     throw new AppError("Técnico não encontrado!", 404);
                 };
 
+                const { password: _c, ...coachWithoutPassword } = user;
+
                 return {
                     type: "coach",
-                    ...user,
+                    ...coachWithoutPassword,
                     coachData: coach
                 };
 
@@ -38,6 +43,9 @@ class ProfileService {
                 const player = await prisma.player.findFirst({
                     where: {
                         user_id
+                    },
+                    include: {
+                        team: true
                     }
                 });
 
@@ -45,16 +53,20 @@ class ProfileService {
                     throw new AppError("Jogador não encontrado!", 404);
                 };
 
+                const { password: _p, ...playerWithoutPassword } = user;
+
                 return {
                     type: "player",
-                    ...user,
+                    ...playerWithoutPassword,
                     playerData: player
                 };
 
             case "admin":
+                const { password: _a, ...adminWithoutPassword } = user;
+                
                 return { 
                     type: "admin",
-                    ...user
+                    ...adminWithoutPassword
                 };
 
             default:
