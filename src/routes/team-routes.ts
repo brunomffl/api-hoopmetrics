@@ -1,9 +1,8 @@
 import { Router } from "express";
 import { TeamController } from "@/controller/team-controller";
-import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
 import { validateBody, validateParams } from "@/middlewares/validate-schema";
-import { createTeamSchema, updateTeamScehma, validateTeamId } from "@/schemas/teamSchema";
 import { verifyUserAuthorizations } from "@/middlewares/verify-user-authorization";
+import { createTeamSchema, updateTeamScehma, validateTeamId } from "@/schemas/teamSchema";
 
 const teamRoutes = Router();
 const teamController = new TeamController();
