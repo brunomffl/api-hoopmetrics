@@ -3,7 +3,6 @@ import { CoachController } from "@/controller/coach-controller";
 import { validateBody, validateParams } from "@/middlewares/validate-schema";
 import { createCoachSchema, updateCoachSchema, validateCoachId } from "@/schemas/coachSchema";
 import { verifyUserAuthorizations } from "@/middlewares/verify-user-authorization";
-import { ensureAuthenticated } from "@/middlewares/ensure-authenticated";
 
 const coachRoutes = Router();
 const coachController = new CoachController()

@@ -14,6 +14,10 @@ class AuthController {
         const user = { email, password };
         return res.status(200).json(await this.authService.login(user));
     }
+
+    async logout(req: Request, res: Response){
+        return res.status(200).json({ message: "Logout realizado com sucesso!" });
+    }
 };
 
 export { AuthController };
