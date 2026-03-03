@@ -32,7 +32,7 @@ teamRoutes.delete("/admin/:id",
 );
 
 teamRoutes.get("/",
-    verifyUserAuthorizations(['coach', 'player']),
+    verifyUserAuthorizations(['coach', 'player', 'admin']),
     teamController.getMyTeam.bind(teamController),
 );
 export { teamRoutes };
