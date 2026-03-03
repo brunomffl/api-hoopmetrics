@@ -8,8 +8,8 @@ const teamRoutes = Router();
 const teamController = new TeamController();
 
 teamRoutes.post("/admin",
-    validateBody(createTeamSchema),
     verifyUserAuthorizations(['admin']),
+    validateBody(createTeamSchema),
     teamController.create.bind(teamController),
 );
 
@@ -20,14 +20,14 @@ teamRoutes.get("/admin",
 
 
 teamRoutes.put("/admin/:id",
-    validateParams(updateTeamScehma),
     verifyUserAuthorizations(['admin']),
+    validateParams(updateTeamScehma),
     teamController.update.bind(teamController),
 );
 
 teamRoutes.delete("/admin/:id",
-    validateParams(validateTeamId),
     verifyUserAuthorizations(['admin']),
+    validateParams(validateTeamId),
     teamController.delete.bind(teamController),
 );
 

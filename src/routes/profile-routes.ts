@@ -8,4 +8,8 @@ profileRoutes.get("/",
     profileController.getProfile.bind(profileController)
 );
 
+profileRoutes.put("/",
+    profileController.update.bind(profileController),
+);
+
 export { profileRoutes };

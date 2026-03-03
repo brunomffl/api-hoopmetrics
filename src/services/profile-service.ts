@@ -1,5 +1,6 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
+import { UpdateUserSchema } from "@/schemas/profileSchema";
 
 class ProfileService {
 
@@ -73,6 +74,37 @@ class ProfileService {
                 throw new AppError("Usuário não tem perfil definido, contate o suporte.", 400);
         }
     };
+
+    async update(user_id: string, pfp_url?: string | null){
+
+        const user = await prisma.user.findFirst({
+            where: {
+                id: user_id
+            }
+        });
+
+        if(!user){
+            throw new AppError("Usuário não encontrado!", 404);
+        };
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: user_id
+            },
+            data: {
+                pfp_url
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                pfp_url: true,
+                role: true,
+            }
+        });
+
+        return updatedUser;
+    }
 };
 
 export { ProfileService };

@@ -24,8 +24,9 @@ routes.use("/team",
     teamRoutes,
 );
 
-//teste
+//com middleware
 routes.use("/profile",
+    ensureAuthenticated,
     profileRoutes,
 );
 
